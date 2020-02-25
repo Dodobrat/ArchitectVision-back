@@ -3,7 +3,6 @@ const fileUpload = require('express-fileupload');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-const _ = require('lodash');
 
 const app = express();
 
@@ -21,6 +20,7 @@ app.use(express.static('uploads'));
 //Project Routes
 app.use('/api/admin', require('./routes/api/admin'));
 app.use('/api/rooms', require('./routes/api/rooms'));
+app.use('/api/notes', require('./routes/api/notes'));
 
 //Local server
 const PORT = process.env.PORT || 5000;

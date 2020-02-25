@@ -49,17 +49,11 @@ router.put('/:id', async (req, res) => {
     const data = await Room.updateRoom(req.params.id, updatedRoom);
     await res.json(data);
 });
-//
-// router.delete('/:id', (req, res) => {
-//     const found = rooms.filter(project => project.id === parseInt(req.params.id));
-//
-//     if (found.length !== 0){
-//         res.json({msg: 'Project Deleted!', projects: rooms.filter(project => project.id !== parseInt(req.params.id))});
-//     }else {
-//         res.status(404).json({
-//             msg: 'Project not found!'
-//         });
-//     }
-// });
+
+router.delete('/:id', async (req, res) => {
+    const data = await Room.deleteRoom(req.params.id);
+
+    await res.json(data);
+});
 
 module.exports = router;
