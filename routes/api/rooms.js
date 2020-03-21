@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Room = require('../../models/Room');
+const AdmZip = require('adm-zip');
 
 router.get('/', async (req, res) => {
     const data = await Room.getRooms();
@@ -14,16 +15,25 @@ router.post('/', async (req, res) => {
         createdAt: new Date()
     };
 
-    if (!newRoom.title || !req.files || Object.keys(req.files).length === 0){
+    if (!newRoom.title || !req.files || Object.keys(req.files).length === 0) {
         return res.status(400).json({msg: 'Please fill in all fields'});
     }
 
     const model = req.files.model;
     const timestamp = new Date();
 
-    model.mv(`./uploads/${timestamp.getTime()}_${model.name}`);
+    await model.mv(`./uploads/${timestamp.getTime()}_${model.name}`);
 
-    newRoom.model = `./uploads/${timestamp.getTime()}_${model.name}`;
+    const zip = new AdmZip(`./uploads/${timestamp.getTime()}_${model.name}`);
+    const zipEntries = zip.getEntries();
+
+    zipEntries.forEach((zipEntry) => {
+        if (zipEntry.entryName.indexOf('.gltf') > -1) {
+            newRoom.model = `./files/${timestamp.getTime()}_${model.name}_folder/${zipEntry.entryName.toString()}`;
+        }
+    });
+
+    zip.extractAllTo(`./files/${timestamp.getTime()}_${model.name}_folder`, true);
 
     const data = await Room.addRoom(newRoom);
 
@@ -42,7 +52,7 @@ router.put('/:id', async (req, res) => {
     };
     const model = req.files && req.files.model;
     const timestamp = new Date();
-    if (model){
+    if (model) {
         model.mv(`./uploads/${timestamp.getTime()}_${model.name}`);
         updatedRoom.model = `./uploads/${timestamp.getTime()}_${model.name}`;
     }

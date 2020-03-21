@@ -16,6 +16,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(morgan('dev'));
 
 app.use(express.static('uploads'));
+app.use(express.static('files'));
 
 //Project Routes
 app.use('/api/admin', require('./routes/api/admin'));
