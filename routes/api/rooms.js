@@ -43,7 +43,7 @@ router.post('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
     const data = await Room.getRoom(req.params.id);
 
-    await res.json(data);
+    await res.json(data[0]);
 });
 
 router.put('/:id', async (req, res) => {
