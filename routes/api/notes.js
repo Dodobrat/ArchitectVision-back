@@ -9,6 +9,7 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
+    //initializing new Note object
     const newNote = {
         roomId: req.body.roomId,
         title: req.body.title,
@@ -16,10 +17,12 @@ router.post('/', async (req, res) => {
         createdAt: new Date()
     };
 
-    if (!newNote.roomId || !newNote.title || !newNote.description){
+    //error checking
+    if (!newNote.title || !newNote.description){
         return res.status(400).json({msg: 'Please fill in all fields'});
     }
 
+    //create new Note
     const data = await Note.addNote(newNote);
 
     await res.json(data);
